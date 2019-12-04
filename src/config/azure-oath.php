@@ -39,5 +39,8 @@ return [
     'user_map' => [
         'name' => 'name',
         'email' => 'email',
-    ]
+    ],
+
+	//Enter here your own AuthController if you want to override the package controller.
+	'auth_controller' => null,
 ];
