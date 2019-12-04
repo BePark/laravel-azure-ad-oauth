@@ -1,5 +1,5 @@
 # Laravel Socialite Azure Active Directory Plugin
-
+Fork from  metrogistics/laravel-azure-ad-oauth
 ## Installation
 
 `composer require metrogistics/laravel-azure-ad-oauth`
@@ -15,7 +15,7 @@ Metrogistics\AzureSocialite\ServiceProvider::class,
 Publish the config and override any defaults:
 
 ```
-php artisan vendor publish
+php artisan vendor:publish
 ```
 
 Add the necessary env vars:
@@ -54,11 +54,11 @@ If you need to set additional user fields when the user model is created at logi
 2. Create a new application
   1. Choose a name
   2. Select the "Web app / API" Application Type
-  3. Add the "Sign-on URL". This will typically be `https://domain.com/auth/login`
+  3. Add the "Sign-on URL". This will typically be `https://domain.com/auth/login` (This doesn't seems to be asked anymore)
   4. Click "Create"
 3. Click into the newly created app.
 4. The "Application ID" is what you will need for your `AZURE_AD_CLIENT_ID` env variable.
-5. Click into "Reply URLs". You will need to whitelist the redirection path for your app here. It will typically be `https://domain.com/login/microsoft/callback`. Click "Save"
+5. Click into "Reply URLs". You will need to whitelist the redirection path for your app here. It will typically be `https://domain.com/login/microsoft/callback`. Click "Save" (now named Redirect URIs)
 6. Select the permissions required for you app in the "Required permissions" tab.
 7. Add any necessary roles to the manifest:
   1. Click on the "Manifest" tab.
@@ -79,7 +79,7 @@ If you need to set additional user fields when the user model is created at logi
 		  ],
 		```
   3. Click "Save"
-8. In the "Keys" tab, enter a description (something like "App Secret"). Set Duration to "Never Expires". Click "Save". Copy the whole key. This will not show again. You will need this value for the `AZURE_AD_CLIENT_SECRET` env variable.
-9. Click on the "Managed application" link (It will be the name of the application);
+8. In the "Keys" tab (named Certificates & secrets), enter a description (something like "App Secret"). Set Duration to "Never Expires". Click "Save". Copy the whole key. This will not show again. You will need this value for the `AZURE_AD_CLIENT_SECRET` env variable.
+9. Go back in Azure active directory and click on the "Entreprise application" link. Then click on the application name
 10. Under the "Properties" tab, enable user sign-in. Make user assignment required. Click "Save".
 11. Under the "Users and groups" tab, add users and their roles as needed.
