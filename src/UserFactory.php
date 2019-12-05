@@ -4,7 +4,10 @@ namespace Metrogistics\AzureSocialite;
 
 class UserFactory
 {
+	/** @var array */
     protected $config;
+
+	/** @var  */
     protected static $user_callback;
 
     public function __construct()
