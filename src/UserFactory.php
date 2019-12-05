@@ -15,18 +15,11 @@ class UserFactory
         $this->config = config('azure-oath');
     }
 
-    public function convertAzureUser($azure_user)
+    public function convertAzureUser($user)
     {
         $user_class = config('azure-oath.user_class');
-        $user_map = config('azure-oath.user_map');
-        $id_field = config('azure-oath.user_id_field');
 
-        $new_user = new $user_class;
-        $new_user->$id_field = $azure_user->id;
-
-        foreach($user_map as $azure_field => $user_field){
-            $new_user->$user_field = $azure_user->$azure_field;
-        }
+        $new_user = new $user_class($user);
 
         $callback = static::$user_callback;
 
@@ -39,6 +32,29 @@ class UserFactory
         return $new_user;
     }
 
+	/**
+	 * @param $azure_user
+	 * @return array
+	 */
+    public static function mapUserData($azure_user): array
+    {
+	    $user_map = config('azure-oath.user_map');
+	    $id_field = config('azure-oath.user_id_field');
+		$data = [];
+
+		$data[$id_field] = $azure_user->id;
+
+	    foreach($user_map as $azure_field => $user_field){
+		    $data[$user_field] = $azure_user->$azure_field;
+	    }
+
+	    return $data;
+    }
+
+	/**
+	 * @param $callback
+	 * @throws \Exception
+	 */
     public static function userCallback($callback)
     {
         if(! is_callable($callback)){
