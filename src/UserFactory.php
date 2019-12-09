@@ -12,12 +12,12 @@ class UserFactory
 
     public function __construct()
     {
-        $this->config = config('azure-oath');
+        $this->config = config('azure-oath.instances.azure-oauth');
     }
 
     public function convertAzureUser($user)
     {
-        $user_class = config('azure-oath.user_class');
+        $user_class = config('azure-oath.instances.azure-oauth.user_class');
 
         $new_user = new $user_class($user);
 
@@ -38,8 +38,8 @@ class UserFactory
 	 */
     public static function mapUserData($azure_user): array
     {
-	    $user_map = config('azure-oath.user_map');
-	    $id_field = config('azure-oath.user_id_field');
+	    $user_map = config('azure-oath.instances.azure-oauth.user_map');
+	    $id_field = config('azure-oath.instances.azure-oauth.user_id_field');
 		$data = [];
 
 		$data[$id_field] = $azure_user->id;

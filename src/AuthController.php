@@ -23,14 +23,14 @@ class AuthController extends Controller
         auth()->login($authUser, true);
 
         return redirect(
-            config('azure-oath.redirect_on_login')
+            config('azure-oath.instances.azure-oauth.redirect_on_login')
         );
     }
 
     protected function findOrCreateUser($user)
     {
-        $user_class = config('azure-oath.user_class');
-        $azureUserId = config('azure-oath.user_id_field');
+        $user_class = config('azure-oath.instances.azure-oauth.user_class');
+        $azureUserId = config('azure-oath.instances.azure-oauth.user_id_field');
 
         $authUser = $user_class::where($azureUserId, $user[$azureUserId])->first();
 
