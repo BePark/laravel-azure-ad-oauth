@@ -19,14 +19,16 @@ class ServiceProvider extends BaseServiceProvider
 
         foreach(config('azure-oath.instances') as $name => $instance)
         {
-	        $this->app['Laravel\Socialite\Contracts\Factory']->extend($name, function($app) use ($instance) {
+	        $this->app['Laravel\Socialite\Contracts\Factory']->extend($name, function($app) use ($instance)
+	        {
 		        return $app['Laravel\Socialite\Contracts\Factory']->buildProvider(
 			        'Metrogistics\AzureSocialite\AzureOauthProvider',
 			        $instance['credentials']
 		        );
 	        });
 
-	        $this->app['router']->group(['middleware' => $instance['routes']['middleware']], function($router){
+	        $this->app['router']->group(['middleware' => $instance['routes']['middleware']], function($router)  use ($instance)
+	        {
 		        $router->get($instance['routes']['login'], ($instance['auth_controller'] ?? 'Metrogistics\AzureSocialite\AuthController') . '@redirectToOauthProvider');
 		        $router->get($instance['routes']['callback'], ($instance['auth_controller'] ?? 'Metrogistics\AzureSocialite\AuthController') . '@handleOauthResponse');
 	        });
