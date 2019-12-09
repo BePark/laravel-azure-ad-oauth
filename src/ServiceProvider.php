@@ -7,15 +7,6 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
-    public function register()
-    {
-        // $this->app->bind('azure-user', function(){
-        //     return new AzureUser(
-        //         session('azure_user')
-        //     );
-        // });
-    }
-
     public function boot()
     {
         $this->publishes([
@@ -26,16 +17,20 @@ class ServiceProvider extends BaseServiceProvider
             __DIR__.'/config/azure-oath.php', 'azure-oath'
         );
 
-        $this->app['Laravel\Socialite\Contracts\Factory']->extend('azure-oauth', function($app){
-            return $app['Laravel\Socialite\Contracts\Factory']->buildProvider(
-                'Metrogistics\AzureSocialite\AzureOauthProvider',
-                config('azure-oath.credentials')
-            );
-        });
+        foreach(config('azure-oauth.instances') as $name => $instance)
+        {
+	        $this->app['Laravel\Socialite\Contracts\Factory']->extend($name, function($app) use ($instance) {
+		        return $app['Laravel\Socialite\Contracts\Factory']->buildProvider(
+			        'Metrogistics\AzureSocialite\AzureOauthProvider',
+			        $instance['credentials']
+		        );
+	        });
 
-        $this->app['router']->group(['middleware' => config('azure-oath.routes.middleware')], function($router){
-            $router->get(config('azure-oath.routes.login'), config('azure-oath.auth_controller', 'Metrogistics\AzureSocialite\AuthController') . '@redirectToOauthProvider');
-            $router->get(config('azure-oath.routes.callback'), config('azure-oath.auth_controller', 'Metrogistics\AzureSocialite\AuthController') . '@handleOauthResponse');
-        });
+	        $this->app['router']->group(['middleware' => $instance['routes']['middleware']], function($router){
+		        $router->get($instance['routes']['login'], ($instance['auth_controller'] ?? 'Metrogistics\AzureSocialite\AuthController') . '@redirectToOauthProvider');
+		        $router->get($instance['routes']['callback'], ($instance['auth_controller'] ?? 'Metrogistics\AzureSocialite\AuthController') . '@handleOauthResponse');
+	        });
+        }
+
     }
 }
