@@ -17,7 +17,7 @@ class ServiceProvider extends BaseServiceProvider
             __DIR__.'/config/azure-oath.php', 'azure-oath'
         );
 
-        foreach(config('azure-oauth.instances') as $name => $instance)
+        foreach(config('azure-oath.instances') as $name => $instance)
         {
 	        $this->app['Laravel\Socialite\Contracts\Factory']->extend($name, function($app) use ($instance) {
 		        return $app['Laravel\Socialite\Contracts\Factory']->buildProvider(
